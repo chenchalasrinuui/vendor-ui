@@ -1,0 +1,22 @@
+[
+    {
+        "id": "home",
+        "name": "Home",
+        "path": "home"
+    },
+    {
+        "id": "vendor",
+        "name": "Vendors",
+        "path": "vendors"
+    },
+    {
+        "id": "changePwd",
+        "name": "Change Pwd",
+        "path": "change-pwd"
+    },
+    {
+        "id": "logout",
+        "name": "Logout",
+        "path": "/"
+    }
+]
