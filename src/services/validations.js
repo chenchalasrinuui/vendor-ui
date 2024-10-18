@@ -52,7 +52,7 @@ export function handleFormLevelValidation(inputControls, setInputControls) {
     return [isInValid, dataObj]
 }
 
-export function setFormData(inputControls, setInputControls, data, isEdit: boolean, fieldName) {
+export function setFormData(inputControls, setInputControls, data, isEdit, fieldName) {
     const clonedInputControls = JSON.parse(JSON.stringify(inputControls))
     clonedInputControls.forEach((obj) => {
         if (isEdit && obj.name === fieldName) {

@@ -1,14 +1,32 @@
 import { init } from "./init"
 
 export const appReducer = (state = init, action) => {
+
     switch (action.type) {
+
         case 'LOGIN':
-            return {
+            state = {
                 ...state,
                 isLoggedIn: action.payload
             }
-        default:
-            return state;
-
+            break;
+        case 'LOADER':
+            state = {
+                ...state,
+                isShowLoader: action.payload
+            }
+            break;
+        case 'MODAL':
+            state = {
+                ...state,
+                modal: action.payload
+            }
+        case 'TOASTER':
+            state = {
+                ...state,
+                toaster: action.payload
+            }
+            break;
     }
+    return state;
 }

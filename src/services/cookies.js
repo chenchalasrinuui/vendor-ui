@@ -21,7 +21,7 @@ export class AppCookies {
         document.cookie = `${key}=;expires=${getPrevDate()}`
 
     }
-    static deleteAllCookies() {
+    static clear() {
         const cookiesObj = getCookiesObj();
         for (const key in cookiesObj) {
             document.cookie = `${key}=;expires=${getPrevDate()}`

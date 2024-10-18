@@ -10,10 +10,27 @@
         "hasError": false,
         "value": "",
         "inputCols": "3",
-        "placeholder": "Email/Phone",
+        "placeholder": "User id",
         "criteria": [
             "REQUIRED",
-            "EMAIL/PHONE"
+            "EMAIL"
+        ]
+    },
+    {
+        "lbl": "Password",
+        "lblCols": "5",
+        "name": "pwd",
+        "type": "text",
+        "errMsgCols": "4",
+        "isRequired": true,
+        "errorMsg": "",
+        "hasError": false,
+        "value": "",
+        "inputCols": "3",
+        "placeholder": "Password",
+        "criteria": [
+            "REQUIRED",
+            "MIN5CHAR"
         ]
     }
 ]
