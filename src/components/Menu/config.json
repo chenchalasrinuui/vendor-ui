@@ -5,9 +5,9 @@
         "path": "home"
     },
     {
-        "id": "vendor",
-        "name": "Vendors",
-        "path": "vendors"
+        "id": "products",
+        "name": "Products",
+        "path": "products"
     },
     {
         "id": "changePwd",

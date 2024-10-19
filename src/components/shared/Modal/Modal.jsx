@@ -1,12 +1,13 @@
 import React, { useContext } from 'react'
 import styles from './Modal.module.css'
-import { appCtx } from '@/context/appCtx'
+import { useDispatch, useSelector } from 'react-redux'
 
 
 export const Modal = () => {
-    const { dispatch, state } = useContext(appCtx)
+    const dispatch = useDispatch();
+    const { modalAction } = useSelector((state) => state?.appReducer?.modal || {})
     const fnOK = () => {
-        state?.modal?.modalAction?.()
+        modalAction();
         fnCancel();
     }
     const fnCancel = () => {

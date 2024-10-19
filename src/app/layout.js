@@ -11,7 +11,7 @@ const inter = Inter({ subsets: ["latin"] });
 
 export default function RootLayout({ children }) {
   const client = new ApolloClient({
-    uri: "http://localhost:3000/graphql",
+    uri: "http://localhost:2020/graphql",
     cache: new InMemoryCache()
   })
   return (

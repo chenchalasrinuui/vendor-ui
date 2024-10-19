@@ -36,7 +36,7 @@ export const Menu = () => {
         }
     }
     const fnLogout = () => {
-        AppCookies.deleteAllCookies();
+        AppCookies.clear();
         dispatch({
             type: "LOGIN",
             payload: false
