@@ -20,7 +20,7 @@
         "lbl": "Password",
         "lblCols": "5",
         "name": "pwd",
-        "type": "text",
+        "type": "password",
         "errMsgCols": "4",
         "isRequired": true,
         "errorMsg": "",

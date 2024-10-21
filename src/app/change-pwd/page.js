@@ -1,8 +1,3 @@
-import React from 'react'
-const page = () => {
-    return (
-        <div>changepwd</div>
-    )
-}
+import { ChangePwd } from "@/components/ChangePwd";
 
-export default page
+export default ChangePwd;

@@ -1,0 +1,55 @@
+[
+    {
+        "lbl": "Current Password",
+        "lblCols": "5",
+        "name": "pwd",
+        "type": "password",
+        "errMsgCols": "4",
+        "isRequired": true,
+        "errorMsg": "",
+        "hasError": false,
+        "value": "",
+        "inputCols": "3",
+        "placeholder": "Current Password",
+        "criteria": [
+            "REQUIRED",
+            "MIN5CHAR"
+        ]
+    },
+    {
+        "lbl": "New Password",
+        "lblCols": "5",
+        "name": "newPwd",
+        "type": "password",
+        "errMsgCols": "4",
+        "isRequired": true,
+        "errorMsg": "",
+        "hasError": false,
+        "value": "",
+        "inputCols": "3",
+        "placeholder": "New Password",
+        "criteria": [
+            "REQUIRED",
+            "MIN5CHAR",
+            "RETYPEPWD"
+        ]
+    },
+    {
+        "lbl": "Retype Password",
+        "lblCols": "5",
+        "name": "retypePwd",
+        "type": "password",
+        "errMsgCols": "4",
+        "isRequired": true,
+        "errorMsg": "",
+        "hasError": false,
+        "value": "",
+        "inputCols": "3",
+        "placeholder": "Retype Password",
+        "criteria": [
+            "REQUIRED",
+            "MIN5CHAR",
+            "RETYPEPWD"
+        ]
+    }
+]

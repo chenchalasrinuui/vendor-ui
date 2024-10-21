@@ -14,16 +14,32 @@ const regEx = {
     "PHONE": {
         pattern: /^[0-9]{10}$/,
         message: "Exactly 10 digits"
+    },
+    "RETYPEPWD": {
+        message: "Password mismatch"
     }
 }
 
-function validate(inputObj) {
+function validate(inputObj, inputControls) {
     inputObj.errorMsg = "";
     for (let val of inputObj?.criteria) {
         const { pattern, message } = regEx[val]
-        if (!pattern.test(inputObj?.value)) {
-            inputObj.errorMsg = message
-            break;
+        if (val === "RETYPEPWD") {
+            const pwdObj = inputControls.find((obj) => obj.name === 'newPwd')
+            const retypePwdObj = inputControls.find((obj) => obj.name === 'retypePwd')
+            pwdObj.errorMsg = ""
+            retypePwdObj.errorMsg = ""
+
+            if (pwdObj?.value && retypePwdObj?.value && pwdObj?.value !== retypePwdObj?.value) {
+                inputObj.errorMsg = message
+                break;
+            }
+
+        } else {
+            if (!pattern.test(inputObj?.value)) {
+                inputObj.errorMsg = message
+                break;
+            }
         }
     }
 }
@@ -31,11 +47,12 @@ function validate(inputObj) {
 export function handleFieldLevelValidation(eve, inputControls, setInputControls) {
     const { name, value } = eve?.target
     const clonedInputControls = JSON.parse(JSON.stringify(inputControls))
+
     let inputObj = clonedInputControls.find((obj) => {
         return obj.name === name
     })
     inputObj.value = value;
-    validate(inputObj)
+    validate(inputObj, clonedInputControls)
     setInputControls(clonedInputControls)
 }
 
@@ -44,7 +61,7 @@ export function handleFormLevelValidation(inputControls, setInputControls) {
     const dataObj = {}
     clonedInputControls.forEach((obj) => {
         dataObj[obj.name] = obj.value;
-        validate(obj)
+        validate(obj, clonedInputControls)
     })
     const isInValid = clonedInputControls.some((obj) => obj.errorMsg)
     setInputControls(clonedInputControls)
