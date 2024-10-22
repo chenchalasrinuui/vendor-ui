@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import styles from './Captcha.module.css'
 
-export const Captcha = ({ validateCaptcha }) => {
+export const Captcha = ({ validateCaptcha, isValidCaptcha, isFirstTimeLoad }) => {
     const [captchaText, setCapatchText] = useState('')
     useEffect(() => {
         fnGenerateCaptcha()
@@ -22,6 +22,7 @@ export const Captcha = ({ validateCaptcha }) => {
     const handleChange = (eve) => {
         const value = eve.target.value
         validateCaptcha(value === captchaText)
+
     }
     return (
         <div className='row'>
@@ -35,6 +36,9 @@ export const Captcha = ({ validateCaptcha }) => {
                 <p>
                     <span className={styles.captcha}>{captchaText}</span><button onClick={fnGenerateCaptcha} className="btn btn-dark">refresh</button>
                 </p>
+            </div>
+            <div className='col-sm-4 text-danger'>
+                {!isFirstTimeLoad && !isValidCaptcha && <b>Invalid Captch</b>}
             </div>
 
 

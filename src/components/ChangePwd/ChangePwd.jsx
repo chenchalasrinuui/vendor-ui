@@ -8,17 +8,21 @@ import { Captcha } from '../shared/Captcha'
 export const ChangePwd = () => {
     const [inputControls, setInputControls] = useState(config)
     const [isValidCaptcha, setIsValidCaptch] = useState(false);
+    const [isFirstTimeLoad, setIsFirstTimeLoad] = useState(true);
     const handleChange = (eve) => {
         handleFieldLevelValidation(eve, inputControls, setInputControls)
     }
 
     const handleChangePwd = () => {
-        if (!isValidCaptcha) {
-            alert('invalid captch')
-            return;
-        }
+
         const [isInValid, data] = handleFormLevelValidation(inputControls, setInputControls)
         if (isInValid) return;
+        if (!isValidCaptcha) {
+            setIsFirstTimeLoad(false);
+            return;
+        };
+        alert('send req to server')
+
     }
 
     const validateCaptcha = (isValid) => {
@@ -34,7 +38,7 @@ export const ChangePwd = () => {
                 })
             }
 
-            <Captcha validateCaptcha={validateCaptcha} />
+            <Captcha validateCaptcha={validateCaptcha} isValidCaptcha={isValidCaptcha} isFirstTimeLoad={isFirstTimeLoad} />
 
             <div className='row mb-3'>
                 <div className='offset-sm-5 col-sm-7'>
