@@ -1,6 +1,7 @@
 "use client"
 import { Inter } from "next/font/google";
 import "./globals.css";
+import './animations.css'
 import "bootstrap/dist/css/bootstrap.css"
 import { Provider, useSelector } from "react-redux";
 import { store } from "@/statemanagement/appStore";

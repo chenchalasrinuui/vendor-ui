@@ -80,6 +80,11 @@ export function setFormData(inputControls, setInputControls, data, isEdit, field
     setInputControls(clonedInputControls)
 }
 
-export function clearFormData() {
 
+export function clearFormData(inputControls, setInputControls) {
+    const clonedInputControls = JSON.parse(JSON.stringify(inputControls))
+    clonedInputControls.forEach((obj) => {
+        obj.value = ""
+    })
+    setInputControls(clonedInputControls)
 }

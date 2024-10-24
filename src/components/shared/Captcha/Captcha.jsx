@@ -1,11 +1,14 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, forwardRef } from 'react'
 import styles from './Captcha.module.css'
 
-export const Captcha = ({ validateCaptcha, isValidCaptcha, isFirstTimeLoad }) => {
+export const Captcha = forwardRef(({ validateCaptcha, isValidCaptcha, isFirstTimeLoad }, ref) => {
     const [captchaText, setCapatchText] = useState('')
+    const [value, setValue] = useState('')
+
     useEffect(() => {
         fnGenerateCaptcha()
     }, [])
+
     const fnGenerateCaptcha = () => {
         let chars = "";
 
@@ -17,10 +20,12 @@ export const Captcha = ({ validateCaptcha, isValidCaptcha, isFirstTimeLoad }) =>
         }
         setCapatchText(chars)
         validateCaptcha(false);
+        setValue("")
     }
 
     const handleChange = (eve) => {
         const value = eve.target.value
+        setValue(value);
         validateCaptcha(value === captchaText)
 
     }
@@ -31,10 +36,10 @@ export const Captcha = ({ validateCaptcha, isValidCaptcha, isFirstTimeLoad }) =>
             </div>
             <div className='col-sm-3'>
                 <p>
-                    <input className='form-control' onChange={handleChange} />
+                    <input value={value} className='form-control' onChange={handleChange} />
                 </p>
                 <p>
-                    <span className={styles.captcha}>{captchaText}</span><button onClick={fnGenerateCaptcha} className="btn btn-dark">refresh</button>
+                    <span className={styles.captcha}>{captchaText}</span><button ref={ref} onClick={fnGenerateCaptcha} className="btn btn-dark">refresh</button>
                 </p>
             </div>
             <div className='col-sm-4 text-danger'>
@@ -44,4 +49,4 @@ export const Captcha = ({ validateCaptcha, isValidCaptcha, isFirstTimeLoad }) =>
 
         </div>
     )
-}
+})
