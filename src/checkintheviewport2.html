@@ -1,0 +1,41 @@
+<style>
+    .box {
+        width: 100px;
+        height: 100px;
+        background-color: red;
+        display: inline-block;
+        border: 2px solid red
+    }
+
+    .content1 {
+        height: 1000px;
+    }
+
+    .content2 {
+        height: 1000px;
+    }
+</style>
+
+<div class="content1"></div>
+<div class="box">
+
+</div>
+<div class="content2"></div>
+
+<script>
+    const boxRef = document.querySelector('.box')
+    const observeObj = new IntersectionObserver(
+        function (entries, obserObj) {
+            const entryObj = entries[0]
+            if (entryObj.isIntersecting) {
+                console.log('inside the view port')
+            } else {
+                console.log('not inside the view port')
+            }
+        },
+        {
+            threshold: 0.5
+        }
+    )
+    observeObj.observe(boxRef)
+</script>

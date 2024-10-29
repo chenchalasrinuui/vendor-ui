@@ -72,7 +72,7 @@ export const ChangePwd = () => {
     }
 
     return (
-        <div className='container-fluid skew'>
+        <div className='container-fluid'>
             <h5 className='text-center my-5'>Change Password</h5>
             {
                 inputControls.map((obj) => {
