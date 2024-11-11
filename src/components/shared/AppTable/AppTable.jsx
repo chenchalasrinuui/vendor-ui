@@ -1,7 +1,9 @@
 import React, { useState } from 'react'
 import styles from './AppTable.module.css'
 import { Pagination } from './Pagination'
-export const AppTable = ({ ths, data, tds, handleEdit, handleDelete }) => {
+import Image from 'next/image'
+
+export const AppTable = ({ ths, imgThs, imgTds, data, tds, handleEdit, handleDelete }) => {
     console.log(111, data);
     const perPage = 5;
     const [currPage, setCurrPage] = React.useState(1)
@@ -20,6 +22,11 @@ export const AppTable = ({ ths, data, tds, handleEdit, handleDelete }) => {
                         <thead>
                             <tr>
                                 {
+                                    imgThs?.map((val, ind) => {
+                                        return <th id={`th_ ${ind}`}>{val}</th>
+                                    })
+                                }
+                                {
                                     ths?.map((val, ind) => {
                                         return <th id={`th_ ${ind}`}>{val}</th>
                                     })
@@ -32,6 +39,11 @@ export const AppTable = ({ ths, data, tds, handleEdit, handleDelete }) => {
                             {
                                 currData?.map((obj, index) => {
                                     return <tr id={`tr_${index}`}>
+                                        {
+                                            imgTds?.map((val, ind) => {
+                                                return <td id={`th_ ${ind}`}><Image src={`${process.env.NEXT_PUBLIC_UPLOAD_URL}${obj[val]}`} width={100} height={100} /></td>
+                                            })
+                                        }
                                         {
                                             tds?.map((val, ind) => {
                                                 return <td id={`th_ ${ind}`}>{obj[val]}</td>
