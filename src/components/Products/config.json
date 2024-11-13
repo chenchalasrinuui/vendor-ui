@@ -1,0 +1,92 @@
+[
+    {
+        "lbl": "Category",
+        "isRequired": true,
+        "tag": "select",
+        "value": "",
+        "name": "category",
+        "isDisabled": false,
+        "errorMsg": "",
+        "lblCols": "12",
+        "inputCols": "12",
+        "errMsgCols": "12",
+        "criteria": [
+            "REQUIRED"
+        ],
+        "options": [
+            "Laptops"
+        ],
+        "values": [
+            "laptops"
+        ]
+    },
+    {
+        "lbl": "Product Name",
+        "isRequired": true,
+        "tag": "input",
+        "value": "",
+        "name": "productName",
+        "type": "text",
+        "isDisabled": false,
+        "errorMsg": "",
+        "lblCols": "12",
+        "inputCols": "12",
+        "errMsgCols": "12",
+        "placeholder": "Product Name",
+        "criteria": [
+            "REQUIRED"
+        ]
+    },
+    {
+        "lbl": "Product Cost",
+        "isRequired": true,
+        "tag": "input",
+        "value": "",
+        "name": "productCost",
+        "type": "number",
+        "isDisabled": false,
+        "errorMsg": "",
+        "lblCols": "12",
+        "inputCols": "12",
+        "errMsgCols": "12",
+        "placeholder": "Product Cost",
+        "criteria": [
+            "REQUIRED"
+        ]
+    },
+    {
+        "lbl": "Description",
+        "isRequired": true,
+        "tag": "textarea",
+        "value": "",
+        "name": "description",
+        "isDisabled": false,
+        "errorMsg": "",
+        "lblCols": "12",
+        "inputCols": "12",
+        "errMsgCols": "12",
+        "placeholder": "Description",
+        "criteria": [
+            "REQUIRED"
+        ]
+    },
+    {
+        "lbl": "Image",
+        "isRequired": true,
+        "tag": "input",
+        "value": "",
+        "name": "image",
+        "type": "file",
+        "isDisabled": false,
+        "errorMsg": "",
+        "lblCols": "12",
+        "inputCols": "12",
+        "errMsgCols": "12",
+        "placeholder": "message",
+        "criteria": [
+            "REQUIRED",
+            "IMAGEONLY",
+            "IMGMAXSIZE5KB"
+        ]
+    }
+]

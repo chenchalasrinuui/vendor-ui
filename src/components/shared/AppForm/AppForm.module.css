@@ -24,3 +24,8 @@
     font-weight: bold;
     cursor: pointer;
 }
+
+.formContainer {
+    height: 90vh;
+    overflow: auto;
+}

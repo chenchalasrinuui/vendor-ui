@@ -17,42 +17,102 @@ const regEx = {
     },
     "RETYPEPWD": {
         message: "Password mismatch"
+    },
+    "IMAGEONLY": {
+        message: "Please select image"
+    },
+    "IMGMAXSIZE5KB": {
+        message: "Size is <6kb , widht <250 , height<250"
     }
 }
 
-function validate(inputObj, inputControls) {
+function getImgWidthAndHeight(file) {
+    return new Promise((resolve, reject) => {
+
+        const img = new Image();
+
+        // Load the image file as a data URL
+        img.src = URL.createObjectURL(file);
+
+        // When the image loads, get its width and height
+        img.onload = function () {
+            const width = img.width;
+            const height = img.height;
+            resolve([width, height])
+            // Release the object URL after use
+            URL.revokeObjectURL(img.src);
+        }
+    })
+
+}
+
+function getFileInfo(file) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file)
+        reader.onload = function () {
+            resolve(reader.result)
+        }
+        reader.onerror = function () {
+
+        }
+    })
+
+}
+
+async function validate(inputObj, inputControls, files) {
     inputObj.errorMsg = "";
-    for (let val of inputObj?.criteria) {
+    outerLoop: for (let val of inputObj?.criteria) {
         const { pattern, message } = regEx[val]
-        if (val === "RETYPEPWD") {
-            const pwdObj = inputControls.find((obj) => obj.name === 'newPwd')
-            const retypePwdObj = inputControls.find((obj) => obj.name === 'retypePwd')
-            pwdObj.errorMsg = ""
-            retypePwdObj.errorMsg = ""
+        switch (val) {
+            case 'RETYPEPWD':
+                const pwdObj = inputControls.find((obj) => obj.name === 'newPwd')
+                const retypePwdObj = inputControls.find((obj) => obj.name === 'retypePwd')
+                pwdObj.errorMsg = ""
+                retypePwdObj.errorMsg = ""
 
-            if (pwdObj?.value && retypePwdObj?.value && pwdObj?.value !== retypePwdObj?.value) {
-                inputObj.errorMsg = message
+                if (pwdObj?.value && retypePwdObj?.value && pwdObj?.value !== retypePwdObj?.value) {
+                    inputObj.errorMsg = message
+                    break outerLoop;
+                }
                 break;
-            }
-
-        } else {
-            if (!pattern.test(inputObj?.value)) {
-                inputObj.errorMsg = message
+            case 'IMAGEONLY':
+                const { type } = files[0]
+                if (!type?.startsWith('image/')) {
+                    inputObj.errorMsg = message
+                    break outerLoop
+                } else {
+                    const fileData = await getFileInfo(files[0])
+                    inputObj.src = fileData;
+                }
                 break;
-            }
+            case 'IMGMAXSIZE5KB':
+                const { size } = files[0]
+                const [width, height] = await getImgWidthAndHeight(files[0])
+                if (!(size < 6150 && width < 250 && height < 250)) {
+                    inputObj.errorMsg = message
+                    break outerLoop;
+                }
+                break;
+            default:
+                if (!pattern.test(inputObj?.value)) {
+                    inputObj.errorMsg = message
+                    break outerLoop;
+                }
         }
     }
 }
 
-export function handleFieldLevelValidation(eve, inputControls, setInputControls) {
-    const { name, value } = eve?.target
+export async function handleFieldLevelValidation(eve, inputControls, setInputControls) {
+    const { name, value, type, files } = eve?.target
     const clonedInputControls = JSON.parse(JSON.stringify(inputControls))
 
     let inputObj = clonedInputControls.find((obj) => {
         return obj.name === name
     })
     inputObj.value = value;
-    validate(inputObj, clonedInputControls)
+
+    await validate(inputObj, clonedInputControls, files)
     setInputControls(clonedInputControls)
 }
 

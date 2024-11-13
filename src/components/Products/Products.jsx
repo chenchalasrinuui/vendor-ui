@@ -1,14 +1,23 @@
 "use client"
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useQuery, useMutation } from '@apollo/client'
 import { GET_PRODUCTS } from '@/graphql/queries/getProducts'
 import { AppTable } from '../shared/AppTable'
 import { updateStoreData } from '@/services/functions'
 import { useDispatch } from 'react-redux'
 import { DELETE_PRODUCT } from '@/graphql/mutations/deleteProduct'
+import { AppForm } from '../shared/AppForm'
+import config from './config.json'
+import { Input } from '../shared/Input'
+import { TextArea } from '../shared/TextArea'
+import { Select } from '../shared/Select'
+import { handleFieldLevelValidation, handleFormLevelValidation } from '@/services/validations'
+
 
 export const Products = () => {
     const dispatch = useDispatch();
+    const [isShowForm, setIsShowForm] = useState(false)
+    const [inputControls, setInputControls] = useState(config)
 
     const [executeDeleteProductMutation] = useMutation(DELETE_PRODUCT)
     const { data, error, loading, refetch } = useQuery(GET_PRODUCTS, {
@@ -18,6 +27,7 @@ export const Products = () => {
     useEffect(() => {
         updateStoreData(dispatch, "LOADER", loading)
     }, [loading])
+
     const deleteProdct = async ({ _id, filePath }) => {
         try {
             updateStoreData(dispatch, 'LOADER', true)
@@ -57,9 +67,27 @@ export const Products = () => {
             modalAction: () => deleteProdct(row)
         })
     }
+
+    const fnAddProduct = () => {
+        setIsShowForm(true);
+    }
+
+    const handleChange = (eve) => {
+        debugger;
+        handleFieldLevelValidation(eve, inputControls, setInputControls)
+
+    }
+
+    const handleSubmit = () => {
+        const [isInValid, data] = handleFormLevelValidation(inputControls, setInputControls)
+        if (isInValid) return;
+    }
+
     return (
         <div>
-
+            <p className='text-end me-2 mt-3'>
+                <button onClick={fnAddProduct} className='btn btn-primary'>Add Product</button>
+            </p>
             <AppTable
                 imgThs={["Image"]}
                 imgTds={["filePath"]}
@@ -68,6 +96,22 @@ export const Products = () => {
                 data={data?.getProducts || []}
                 handleDelete={handleDelete}
             />
+
+            {isShowForm && <AppForm setShowForm={setIsShowForm}>
+                {
+                    inputControls.map((obj) => {
+                        switch (obj.tag) {
+                            case 'input':
+                                return <Input {...obj} hanldeChange={handleChange} />
+                            case 'select':
+                                return <Select {...obj} hanldeChange={handleChange} />
+                            default:
+                                return <TextArea {...obj} hanldeChange={handleChange} />
+                        }
+                    })
+                }
+                <button className='btn btn-primary' onClick={handleSubmit}>Submit</button>
+            </AppForm>}
         </div>
     )
 }

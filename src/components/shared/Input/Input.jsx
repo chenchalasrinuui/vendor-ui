@@ -1,12 +1,25 @@
+import Image from 'next/image'
 import React from 'react'
 
-export const Input = ({ hanldeChange, lbl, isRequired, value, name, type, isDisabled, errorMsg, lblCols, inputCols, errMsgCols, placeholder }) => {
+export const Input = ({ hanldeChange, lbl, src, isRequired, value, name, type, isDisabled, errorMsg, lblCols, inputCols, errMsgCols, placeholder }) => {
+    const prepareInputControls = () => {
+        switch (type) {
+            case 'text':
+            case 'number':
+                return <input placeholder={placeholder} disabled={isDisabled} value={value} onChange={hanldeChange} name={name} type={type} className='form-control' />
+            default:
+                return <><input placeholder={placeholder} disabled={isDisabled} onChange={hanldeChange} name={name} type={type} className='form-control' />
+                    <Image width={100} height={100} src={src} />
+                </>
+
+        }
+    }
     return <div className='row mb-3'>
         <div className={`col-sm-${lblCols} text-end`}>
             <b>{lbl}{isRequired && <span className='text-danger'>*</span>}:</b>
         </div>
         <div className={`col-sm-${inputCols}`}>
-            <input placeholder={placeholder} disabled={isDisabled} value={value} onChange={hanldeChange} name={name} type={type} className='form-control' />
+            {prepareInputControls()}
         </div>
         <div className={`col-sm-${errMsgCols}`}>
             {errorMsg && <b className='text-danger'>{errorMsg}</b>}
