@@ -73,14 +73,15 @@ export const Products = () => {
     }
 
     const handleChange = (eve) => {
-        debugger;
         handleFieldLevelValidation(eve, inputControls, setInputControls)
 
     }
 
-    const handleSubmit = () => {
-        const [isInValid, data] = handleFormLevelValidation(inputControls, setInputControls)
+    const handleSubmit = async () => {
+        const [isInValid, data] = await handleFormLevelValidation(inputControls, setInputControls)
         if (isInValid) return;
+        console.log(data);
+        alert("send request...")
     }
 
     return (

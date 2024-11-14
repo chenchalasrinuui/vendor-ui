@@ -77,7 +77,8 @@ async function validate(inputObj, inputControls, files) {
                 }
                 break;
             case 'IMAGEONLY':
-                const { type } = files[0]
+                if (!files) return;
+                const { type } = files?.[0]
                 if (!type?.startsWith('image/')) {
                     inputObj.errorMsg = message
                     break outerLoop
@@ -87,7 +88,8 @@ async function validate(inputObj, inputControls, files) {
                 }
                 break;
             case 'IMGMAXSIZE5KB':
-                const { size } = files[0]
+                if (!files) return;
+                const { size } = files?.[0]
                 const [width, height] = await getImgWidthAndHeight(files[0])
                 if (!(size < 6150 && width < 250 && height < 250)) {
                     inputObj.errorMsg = message
@@ -105,24 +107,33 @@ async function validate(inputObj, inputControls, files) {
 
 export async function handleFieldLevelValidation(eve, inputControls, setInputControls) {
     const { name, value, type, files } = eve?.target
-    const clonedInputControls = JSON.parse(JSON.stringify(inputControls))
+    // const clonedInputControls = JSON.parse(JSON.stringify(inputControls))
+    const clonedInputControls = Object.assign([], inputControls)
 
     let inputObj = clonedInputControls.find((obj) => {
         return obj.name === name
     })
     inputObj.value = value;
-
+    if (type === 'file') {
+        inputObj.selFile = files
+    }
     await validate(inputObj, clonedInputControls, files)
     setInputControls(clonedInputControls)
 }
 
-export function handleFormLevelValidation(inputControls, setInputControls) {
-    const clonedInputControls = JSON.parse(JSON.stringify(inputControls))
+export async function handleFormLevelValidation(inputControls, setInputControls) {
+    const clonedInputControls = Object.assign([], inputControls)
+
+    //const clonedInputControls = JSON.parse(JSON.stringify(inputControls))
     const dataObj = {}
-    clonedInputControls.forEach((obj) => {
-        dataObj[obj.name] = obj.value;
-        validate(obj, clonedInputControls)
-    })
+
+    await Promise.allSettled(
+        clonedInputControls.map(async (obj) => {
+            dataObj[obj.name] = obj.type === 'file' ? obj.selFile : obj.value;
+            await validate(obj, clonedInputControls, obj.selFile);
+        })
+    );
+
     const isInValid = clonedInputControls.some((obj) => obj.errorMsg)
     setInputControls(clonedInputControls)
 
