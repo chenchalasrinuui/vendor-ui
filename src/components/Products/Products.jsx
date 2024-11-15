@@ -6,12 +6,14 @@ import { AppTable } from '../shared/AppTable'
 import { updateStoreData } from '@/services/functions'
 import { useDispatch } from 'react-redux'
 import { DELETE_PRODUCT } from '@/graphql/mutations/deleteProduct'
+import { SAVE_PRODUCT } from '@/graphql/mutations/saveProduct'
 import { AppForm } from '../shared/AppForm'
 import config from './config.json'
 import { Input } from '../shared/Input'
 import { TextArea } from '../shared/TextArea'
 import { Select } from '../shared/Select'
-import { handleFieldLevelValidation, handleFormLevelValidation } from '@/services/validations'
+import { handleFieldLevelValidation, handleFormLevelValidation, clearFormData } from '@/services/validations'
+import { AppCookies } from '@/services/cookies'
 
 
 export const Products = () => {
@@ -20,6 +22,8 @@ export const Products = () => {
     const [inputControls, setInputControls] = useState(config)
 
     const [executeDeleteProductMutation] = useMutation(DELETE_PRODUCT)
+    const [fnSaveProduct] = useMutation(SAVE_PRODUCT)
+
     const { data, error, loading, refetch } = useQuery(GET_PRODUCTS, {
         fetchPolicy: 'no-cache', // Doesn't check cache before making a network request
     })
@@ -78,10 +82,45 @@ export const Products = () => {
     }
 
     const handleSubmit = async () => {
-        const [isInValid, data] = await handleFormLevelValidation(inputControls, setInputControls)
-        if (isInValid) return;
-        console.log(data);
-        alert("send request...")
+
+        try {
+            const [isInValid, { category, name, cost, description, file }] = await handleFormLevelValidation(inputControls, setInputControls)
+            if (isInValid) return;
+            updateStoreData(dispatch, 'LOADER', true)
+            const res = await fnSaveProduct({
+                variables: {
+                    file: file[0],
+                    "productInput": {
+                        name,
+                        cost: Number(cost),
+                        category,
+                        description,
+                        vendor: AppCookies.getCookie("id")
+                    }
+                }
+            })
+            const { acknowledged, insertedId } = res?.data?.saveProduct
+            let isSuccess = false
+            if (acknowledged && insertedId) {
+                refetch()
+                isSuccess = true
+                setIsShowForm(false)
+                clearFormData(inputControls, setInputControls)
+            }
+            updateStoreData(dispatch, 'TOASTER', {
+                isShowToaster: true,
+                toasterMsg: isSuccess ? 'Success' : "failed",
+                color: isSuccess ? 'green' : 'red'
+            })
+        } catch (ex) {
+            updateStoreData(dispatch, 'TOASTER', {
+                isShowToaster: true,
+                toasterMsg: ex?.message,
+                color: 'red'
+            })
+        } finally {
+            updateStoreData(dispatch, 'LOADER', false)
+        }
     }
 
     return (

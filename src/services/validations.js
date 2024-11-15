@@ -156,6 +156,10 @@ export function clearFormData(inputControls, setInputControls) {
     const clonedInputControls = JSON.parse(JSON.stringify(inputControls))
     clonedInputControls.forEach((obj) => {
         obj.value = ""
+        if (obj.type === 'file') {
+            obj.selFile = ""
+            obj.src = ""
+        }
     })
     setInputControls(clonedInputControls)
 }
