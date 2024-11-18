@@ -6,10 +6,11 @@ export const Input = ({ hanldeChange, lbl, src, isRequired, value, name, type, i
         switch (type) {
             case 'text':
             case 'number':
+            case 'password':
                 return <input placeholder={placeholder} disabled={isDisabled} value={value} onChange={hanldeChange} name={name} type={type} className='form-control' />
             default:
                 return <><input placeholder={placeholder} disabled={isDisabled} onChange={hanldeChange} name={name} type={type} className='form-control' />
-                    <Image width={100} height={100} src={src} />
+                    <Image width={100} height={100} src={src || (value && `${process.env.NEXT_PUBLIC_UPLOAD_URL}${value}?date=${Date.now()}`)} />
                 </>
 
         }

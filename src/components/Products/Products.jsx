@@ -1,5 +1,5 @@
 "use client"
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useQuery, useMutation } from '@apollo/client'
 import { GET_PRODUCTS } from '@/graphql/queries/getProducts'
 import { AppTable } from '../shared/AppTable'
@@ -12,7 +12,7 @@ import config from './config.json'
 import { Input } from '../shared/Input'
 import { TextArea } from '../shared/TextArea'
 import { Select } from '../shared/Select'
-import { handleFieldLevelValidation, handleFormLevelValidation, clearFormData } from '@/services/validations'
+import { handleFieldLevelValidation, handleFormLevelValidation, clearFormData, setFormData } from '@/services/validations'
 import { AppCookies } from '@/services/cookies'
 
 
@@ -20,7 +20,7 @@ export const Products = () => {
     const dispatch = useDispatch();
     const [isShowForm, setIsShowForm] = useState(false)
     const [inputControls, setInputControls] = useState(config)
-
+    const [isEdit, setIsEdit] = useState(false)
     const [executeDeleteProductMutation] = useMutation(DELETE_PRODUCT)
     const [fnSaveProduct] = useMutation(SAVE_PRODUCT)
 
@@ -32,14 +32,14 @@ export const Products = () => {
         updateStoreData(dispatch, "LOADER", loading)
     }, [loading])
 
-    const deleteProdct = async ({ _id, filePath }) => {
+    const deleteProdct = async ({ _id, file }) => {
         try {
             updateStoreData(dispatch, 'LOADER', true)
             const res = await executeDeleteProductMutation({
                 variables: {
                     "data": {
                         "id": _id,
-                        "path": filePath
+                        "path": file
                     }
                 }
             })
@@ -65,19 +65,30 @@ export const Products = () => {
 
         }
     }
+
     const handleDelete = (row) => {
         updateStoreData(dispatch, 'MODAL', {
             isShowModal: true,
             modalAction: () => deleteProdct(row)
         })
     }
-
-    const fnAddProduct = () => {
+    /**
+     * handle edit button click
+     * @param {rowData} obj 
+     */
+    const handleEdit = (obj) => {
+        setIsEdit(true);
+        setFormData(inputControls, setInputControls, obj)
         setIsShowForm(true);
     }
 
-    const handleChange = (eve) => {
-        handleFieldLevelValidation(eve, inputControls, setInputControls)
+    const fnAddProduct = () => {
+        setIsShowForm(true);
+        setIsEdit(false)
+    }
+
+    const handleChange = async (eve) => {
+        await handleFieldLevelValidation(eve, inputControls, setInputControls)
 
     }
 
@@ -123,6 +134,15 @@ export const Products = () => {
         }
     }
 
+    const fnUpdateProduct = () => {
+
+    }
+
+    const fnHideForm = () => {
+        clearFormData(inputControls, setInputControls)
+        setIsShowForm(false);
+    };
+
     return (
         <div>
             <p className='text-end me-2 mt-3'>
@@ -130,14 +150,14 @@ export const Products = () => {
             </p>
             <AppTable
                 imgThs={["Image"]}
-                imgTds={["filePath"]}
+                imgTds={["file"]}
                 ths={["Name", "Cost", "Category", "Description"]}
                 tds={["name", 'cost', 'category', "description"]}
                 data={data?.getProducts || []}
                 handleDelete={handleDelete}
+                handleEdit={handleEdit}
             />
-
-            {isShowForm && <AppForm setShowForm={setIsShowForm}>
+            {isShowForm && <AppForm setShowForm={fnHideForm}>
                 {
                     inputControls.map((obj) => {
                         switch (obj.tag) {
@@ -150,7 +170,9 @@ export const Products = () => {
                         }
                     })
                 }
-                <button className='btn btn-primary' onClick={handleSubmit}>Submit</button>
+
+                {isEdit ? <button className='btn btn-primary' onClick={fnUpdateProduct}>Update</button> :
+                    <button className='btn btn-primary' onClick={handleSubmit}>Submit</button>}
             </AppForm>}
         </div>
     )

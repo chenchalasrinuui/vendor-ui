@@ -4,7 +4,6 @@ import { Pagination } from './Pagination'
 import Image from 'next/image'
 
 export const AppTable = ({ ths, imgThs, imgTds, data, tds, handleEdit, handleDelete }) => {
-    console.log(111, data);
     const perPage = 5;
     const [currPage, setCurrPage] = React.useState(1)
     const [currData, setCurrData] = useState([])
@@ -41,7 +40,7 @@ export const AppTable = ({ ths, imgThs, imgTds, data, tds, handleEdit, handleDel
                                     return <tr id={`tr_${index}`}>
                                         {
                                             imgTds?.map((val, ind) => {
-                                                return <td id={`th_ ${ind}`}><Image src={`${process.env.NEXT_PUBLIC_UPLOAD_URL}${obj[val]}`} width={100} height={100} /></td>
+                                                return <td id={`th_ ${ind}`}><Image src={`${process.env.NEXT_PUBLIC_UPLOAD_URL}${obj[val]}?date=${Date.now()}`} width={100} height={100} /></td>
                                             })
                                         }
                                         {

@@ -13,7 +13,7 @@ export const Login = () => {
     const dispatch = useDispatch();
     const fnLogin = async () => {
         try {
-            const [isInValid, data] = handleFormLevelValidation(inputControls, setInputControls)
+            const [isInValid, data] = await handleFormLevelValidation(inputControls, setInputControls)
             if (isInValid) return;
             updateStoreData(dispatch, 'LOADER', true)
             const res = await fnAuth({
@@ -45,8 +45,8 @@ export const Login = () => {
 
         }
     }
-    const handleChange = (eve) => {
-        handleFieldLevelValidation(eve, inputControls, setInputControls)
+    const handleChange = async (eve) => {
+        await handleFieldLevelValidation(eve, inputControls, setInputControls)
     }
 
     return (

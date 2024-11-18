@@ -8,7 +8,8 @@ query Query {
         cost
         category
         description
-        filePath
+        file
+        vendor
     }
 }
 

@@ -141,7 +141,7 @@ export async function handleFormLevelValidation(inputControls, setInputControls)
 }
 
 export function setFormData(inputControls, setInputControls, data, isEdit, fieldName) {
-    const clonedInputControls = JSON.parse(JSON.stringify(inputControls))
+    const clonedInputControls = Object.assign([], inputControls)
     clonedInputControls.forEach((obj) => {
         if (isEdit && obj.name === fieldName) {
             obj.isDisabled = true
