@@ -113,15 +113,16 @@ export async function handleFieldLevelValidation(eve, inputControls, setInputCon
     let inputObj = clonedInputControls.find((obj) => {
         return obj.name === name
     })
-    inputObj.value = value;
     if (type === 'file') {
         inputObj.selFile = files
+    } else {
+        inputObj.value = value;
     }
     await validate(inputObj, clonedInputControls, files)
     setInputControls(clonedInputControls)
 }
 
-export async function handleFormLevelValidation(inputControls, setInputControls) {
+export async function handleFormLevelValidation(inputControls, setInputControls, isEdit) {
     const clonedInputControls = Object.assign([], inputControls)
 
     //const clonedInputControls = JSON.parse(JSON.stringify(inputControls))
@@ -130,6 +131,11 @@ export async function handleFormLevelValidation(inputControls, setInputControls)
     await Promise.allSettled(
         clonedInputControls.map(async (obj) => {
             dataObj[obj.name] = obj.type === 'file' ? obj.selFile : obj.value;
+            if (isEdit) {
+                if (obj.type === 'file') {
+                    dataObj.filePath = obj.value
+                }
+            }
             await validate(obj, clonedInputControls, obj.selFile);
         })
     );
