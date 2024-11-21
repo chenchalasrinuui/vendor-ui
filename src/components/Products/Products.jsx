@@ -27,6 +27,9 @@ export const Products = () => {
     const [fnSaveProduct] = useMutation(SAVE_PRODUCT)
     const updateProductIdRef = useRef();
     const { data, error, loading, refetch } = useQuery(GET_PRODUCTS, {
+        variables: {
+            vendorId: AppCookies.getCookie('id')
+        },
         fetchPolicy: 'no-cache', // Doesn't check cache before making a network request
     })
 

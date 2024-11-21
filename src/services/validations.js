@@ -97,7 +97,8 @@ async function validate(inputObj, inputControls, files) {
                 }
                 break;
             default:
-                if (!pattern.test(inputObj?.value)) {
+
+                if (!pattern.test(inputObj.type === 'file' ? inputObj.selFile : inputObj?.value)) {
                     inputObj.errorMsg = message
                     break outerLoop;
                 }
